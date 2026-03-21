@@ -22,9 +22,10 @@ Currently there is no prebuilt binaries or anything so you'll have to just run i
 
    ```npm run dev```
 
+   If you wish to contribute to the project please read the [todos](/TODO.MD).
+
 ### This will be improved overtime. The goal is that you can just log into the server and as a user on the server to access the backend.
 
-![TODO](/TODO.MD)
 
 ![Albums](/preview/albums.png)
 ![Album](/preview//album.png)
