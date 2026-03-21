@@ -11,3 +11,5 @@
 5. Implement user restricted access
 
    Example: A user logged out but accessing the web inerface cannot play a track.
+
+6. Add some sort of page loading indicator.
