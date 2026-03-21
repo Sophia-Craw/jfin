@@ -24,9 +24,9 @@ Currently there is no prebuilt binaries or anything so you'll have to just run i
 
 ### This will be improved overtime. The goal is that you can just log into the server and as a user on the server to access the backend.
 
-[Albums](/preview/albums.png)
-[](/preview//album.png)
+![Albums](/preview/albums.png)
+![Album](/preview//album.png)
 
-[Artists](/preview/artists.png)
+![Artists](/preview/artists.png)
 
-[Tracks](/preview/tracks.png)
+![Tracks](/preview/tracks.png)
