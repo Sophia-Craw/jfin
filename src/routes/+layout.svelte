@@ -120,7 +120,10 @@
 			</DialogTrigger>
 			<DialogContent class="flex flex-col p-12 h-160">
 				<DialogHeader>
-					<Label>Search your library.</Label>
+					<Label>
+						<Search />
+						Search your library.
+					</Label>
 				</DialogHeader>
 				<div class="flex flex-col gap-2">
 					<Input bind:value={query} placeholder="Search..." />
