@@ -1,6 +1,6 @@
 # Project Todos
 
-1. --Implement search--
+1. ~~Implement search~~
 
 2. Rebuild root(/) page
 
