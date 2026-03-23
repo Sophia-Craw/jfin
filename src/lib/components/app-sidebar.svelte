@@ -46,7 +46,7 @@
             <SidebarGroupLabel>Libraries</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {#each data.Items as item}
+                    {#each data.Libraries.Items as item}
                         {#if item.Type == "Folder"}
                             <a href={"/library/" + item.Id}>
                                 <SidebarMenuItem>

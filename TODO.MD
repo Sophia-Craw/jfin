@@ -1,6 +1,6 @@
 # Project Todos
 
-1. Implement search
+1. --Implement search--
 
 2. Rebuild root(/) page
 
@@ -13,3 +13,7 @@
    Example: A user logged out but accessing the web inerface cannot play a track.
 
 6. Add some sort of page loading indicator.
+
+7. User profiles
+
+8. Being able to add tracks to the queue individually

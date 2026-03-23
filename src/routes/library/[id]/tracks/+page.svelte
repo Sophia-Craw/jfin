@@ -30,7 +30,7 @@
 
 <main in:fade={{ duration: 500 }} class="flex flex-col gap-2 w-dvw pl-12 pr-75">
     <h1
-        class="sticky top-0 p-12 pl-0 pt-6 pb-4 m-0 font-extrabold text-3xl bg-black w-full z-3 border-b-2"
+        class="sticky top-0 pt-15 p-12 pl-0 pb-4 m-0 font-extrabold text-3xl bg-background w-full z-3 border-b-2"
     >
         All Tracks
     </h1>

@@ -309,7 +309,7 @@
         border: none;
         border-top-style: solid;
         border-width: 1px;
-        border-color: #343434;
+        border-color: #3434348a;
     }
 
     .track-info {

@@ -12,7 +12,7 @@
         Libraries
     </Label>
     <div class="library-list">
-        {#each data.Items as item}
+        {#each data.Libraries.Items as item}
             {#if item.Type == "Folder"}
                 <a href={"/library/" + item.Id}>
                     <div class="item">

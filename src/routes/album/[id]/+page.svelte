@@ -31,7 +31,7 @@
     }
 </script>
 
-<main>
+<main class="mt-12">
     <div class="info-root">
         <div class="image">
             <!-- <img class="glow-img" src={"/api/cover/" + data.AlbumInfo[0].AlbumId} alt=""> -->
