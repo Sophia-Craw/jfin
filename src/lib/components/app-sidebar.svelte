@@ -26,6 +26,9 @@
         Scale,
         ChevronUp,
         LogOut,
+        BedDouble,
+        ChevronsDownUp,
+        ChevronsUpDown,
     } from "@lucide/svelte";
     import SidebarFooter from "./ui/sidebar/sidebar-footer.svelte";
     import SidebarGroupAction from "./ui/sidebar/sidebar-group-action.svelte";
@@ -60,36 +63,46 @@
     })
 </script>
 
-<Sidebar>
+<Sidebar variant="floating" class="pt-8">
     <SidebarContent>
         <SidebarGroup>
             <SidebarGroupContent>
-                <a href="/">
+                <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton class="cursor-pointer" isActive={page.url.pathname === "/"}>
-                            <Home />
-                            Home
+                            {#snippet child({ props })}
+                                <a href="/" {...props}>
+                                    <Home />
+                                    Home
+                                </a>
+                            {/snippet}
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                </a>
+                </SidebarMenu>
             </SidebarGroupContent>
             <SidebarGroupLabel>Libraries</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
                     {#each libraries as item}
-                        <a href={"/library/" + item.Id}>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton class="cursor-pointer"
-                                    isActive={currLib == item.Id || page.params.id === item.Id}
-                                    onclick={() => {
-                                        currLib = item.Id
-                                    }}
-                                >
+                        <SidebarMenuItem>
+                            <SidebarMenuButton
+                                class="cursor-pointer"
+                                isActive={currLib == item.Id || page.params.id === item.Id}
+                            >
+                                {#snippet child({ props })}
+                                    <a
+                                        href={"/library/" + item.Id}
+                                        {...props}
+                                        onclick={() => {
+                                            currLib = item.Id
+                                        }}
+                                    >
                                     <Library />
                                     {item.Name}
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </a>
+                                    </a>
+                                {/snippet}
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
                     {/each}
                 </SidebarMenu>
             </SidebarGroupContent>
@@ -98,69 +111,76 @@
                 <SidebarMenu>
                     {#if currLib}
                         <SidebarMenuItem>
-                            <a href={currLib ? "/library/" + currLib : "/"}>
-                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}`} class="cursor-pointer">
-                                    <DiscAlbum />
-                                    Albums
-                                </SidebarMenuButton>
-                            </a>
+                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}`} class="cursor-pointer">
+                                {#snippet child({ props })}
+                                    <a href={currLib ? "/library/" + currLib : "/"} {...props}>
+                                        <DiscAlbum />
+                                        Albums
+                                    </a>
+                                {/snippet}
+                            </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <a href={currLib ? "/library/" + currLib + "/artists": "/"}>
-                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/artists`}  class="cursor-pointer">
-                                    <User />
-                                    Artists
-                                </SidebarMenuButton>
-                            </a>
+                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/artists`} class="cursor-pointer">
+                                {#snippet child({ props })}
+                                    <a href={currLib ? "/library/" + currLib + "/artists" : "/"} {...props}>
+                                        <User />
+                                        Artists
+                                    </a>
+                                {/snippet}
+                            </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <a href={currLib ? "/library/" + currLib + "/tracks": "/"}>
-                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/tracks`}  class="cursor-pointer">
-                                    <Music />
-                                    Tracks
-                                </SidebarMenuButton>                        
-                            </a>
+                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/tracks`} class="cursor-pointer">
+                                {#snippet child({ props })}
+                                    <a href={currLib ? "/library/" + currLib + "/tracks" : "/"} {...props}>
+                                        <Music />
+                                        Tracks
+                                    </a>
+                                {/snippet}
+                            </SidebarMenuButton>
                         </SidebarMenuItem>              
                     {/if}
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>
     </SidebarContent>
-    <SidebarFooter>
-        <SidebarMenuItem>
-            <DropdownMenu>
-                <DropdownMenuTrigger>
-                    <Item class="cursor-pointer hover:bg-secondary">
-                        <ItemMedia variant="image">
-                            <Avatar>
-                                <AvatarImage src="/api/user/{data.User.Id ? data.User.Id : ""}/avatar"/>
-                            </Avatar>
-                        </ItemMedia>
-                        <ItemContent>
-                            <ItemTitle class="line-clamp-1">{data.User.Name ? data.User.Name : "Log In"}</ItemTitle>
-                            <ItemDescription class="line-clamp-1">{data.User.Address ? data.User.Address : "Log In"}</ItemDescription>
-                        </ItemContent>
-                        <ItemActions>
-                            <ChevronUp class="opacity-50" />
-                        </ItemActions>
-                    </Item>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuGroup>
-                        <DropdownMenuItem class="cursor-pointer">
-                            <User />
-                            Edit Profile
-                        </DropdownMenuItem>
-                        <Separator />
-                        <DropdownMenuItem class="cursor-pointer" variant="destructive" onclick={() => {
-                            goto("/api/logout")
-                        }}>
-                            <LogOut />
-                            Log out
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </SidebarMenuItem>
+    <SidebarFooter class="w-full">
+        <SidebarMenu>
+            <SidebarMenuItem>
+                <DropdownMenu>
+                    <DropdownMenuTrigger class="w-full">
+                        <Item class="flex justify-between cursor-pointer hover:bg-secondary w-full">
+                            <ItemMedia variant="image">
+                                <Avatar>
+                                    <AvatarImage src="/api/user/{data.User.Id ? data.User.Id : ""}/avatar"/>
+                                </Avatar>
+                            </ItemMedia>
+                            <ItemContent>
+                                <ItemTitle class="line-clamp-1">{data.User.Name ? data.User.Name : "Log In"}</ItemTitle>
+                            </ItemContent>
+                            <ItemActions>
+                                <ChevronsUpDown class="opacity-50" />
+                            </ItemActions>
+                        </Item>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <DropdownMenuGroup>
+                            <DropdownMenuItem class="cursor-pointer">
+                                <User />
+                                Edit Profile
+                            </DropdownMenuItem>
+                            <Separator />
+                            <DropdownMenuItem class="cursor-pointer" variant="destructive" onclick={() => {
+                                goto("/api/logout")
+                            }}>
+                                <LogOut />
+                                Log out
+                            </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </SidebarMenuItem>
+        </SidebarMenu>
     </SidebarFooter>
 </Sidebar>

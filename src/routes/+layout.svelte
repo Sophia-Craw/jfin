@@ -98,6 +98,8 @@
 
 <Toaster theme="system" />
 
+<div id="draggable" class="fixed top-0 left-0 right-0 p-4 bg-background z-1000"></div>
+
 <AlertDialog open={data.User.Name ? false : true}>
 	<AlertDialogContent class="w-80">
 		<AlertDialogHeader>
@@ -209,7 +211,7 @@
 </AlertDialog>
 
 <div
-	class="fixed left-64 right-0 top-0 bg-linear-to-b from-background to-transparent flex justify-between p-4 pl-12 pr-12 z-20"
+	class="fixed left-64 right-0 top-0 bg-linear-to-b from-background to-transparent flex justify-between p-4 pl-12 pt-12 pr-12 z-20"
 >
 	<div class="flex bg-blend-lighten gap-2">
 		<Button
@@ -395,22 +397,34 @@
 	</div>
 </div>
 
-<ModeWatcher />
-<SidebarProvider>
-	<AppSidebar {data} />
-	<main>
-		<!-- <div class="top-bar">
-			<SidebarTrigger />
-		</div> -->
-		{@render children()}
-		<Player />
-	</main>
-</SidebarProvider>
+<div class="app">
+	<ModeWatcher />
+	<SidebarProvider>
+		<AppSidebar {data} />
+		<main>
+			<!-- <div class="top-bar">
+				<SidebarTrigger />
+			</div> -->
+			{@render children()}
+			<Player />
+		</main>
+	</SidebarProvider>
+</div>
+
 
 <style>
 	:root {
 		overflow-x: hidden;
 		padding-bottom: 100px;
 		background-color: black;
+	}
+
+	.app {
+		position: relative;
+		top: 20px;
+	}
+
+	#draggable {
+		-webkit-app-region: drag;
 	}
 </style>

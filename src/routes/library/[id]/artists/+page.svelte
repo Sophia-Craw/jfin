@@ -10,7 +10,7 @@
 </script>
 
 <main>
-    <h1 class="sticky top-0 pt-16 p-4 m-0 font-extrabold text-3xl bg-background w-full z-3 border-b-2">Artists</h1>
+    <h1 class="sticky top-0 pt-24 p-4 m-0 font-extrabold text-3xl bg-background w-full z-3 border-b-2">Artists</h1>
     <div class="flex flex-wrap mt-5">
         {#each data.Items as artist}
             <a href={"/artist/" + artist.Name}>

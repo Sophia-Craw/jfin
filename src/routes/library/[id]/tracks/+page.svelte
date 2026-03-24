@@ -28,9 +28,9 @@
     };
 </script>
 
-<main in:fade={{ duration: 500 }} class="flex flex-col gap-2 w-dvw pl-12 pr-75">
+<main in:fade={{ duration: 500 }} class="flex flex-col gap-2 w-dvw pl-12 pr-75 pb-12">
     <h1
-        class="sticky top-0 pt-15 p-12 pl-0 pb-4 m-0 font-extrabold text-3xl bg-background w-full z-3 border-b-2"
+        class="sticky top-0 pt-26 p-12 pl-0 pb-4 m-0 font-extrabold text-3xl bg-background w-full z-3 border-b-2"
     >
         All Tracks
     </h1>

@@ -59,6 +59,9 @@
 
     let cover: HTMLImageElement;
 
+    let scrubPct = $derived(duration > 0 ? (currTime / duration) * 100 : 0);
+    let volumePct = $derived(volume * 100);
+
     onMount(() => {
         currentPlaying.subscribe((t) => {
             console.log(pos);
@@ -151,7 +154,9 @@
                 type="range"
                 bind:value={currTime}
                 max={duration}
+                disabled={playState ? true : false}
                 step={1}
+                style="--range-progress: {scrubPct}%"
             />
         </div>
         <div class="control">
@@ -289,6 +294,7 @@
             min={0}
             type="range"
             id=""
+            style="--range-progress: {volumePct}%"
         />
     </div>
 </main>
@@ -407,13 +413,18 @@
         outline: none;
     }
 
-    /* WEBKIT (Chrome, Safari, Edge, Opera) */
+    /* WEBKIT */
 
-    /* Track */
     input[type="range"]::-webkit-slider-runnable-track {
-        background: #1c1c1c;
-        height: 0.5rem;
-        border-radius: 9999px;
+        height: 0.3rem;
+        border-radius: 500px;
+        background: linear-gradient(
+            to right,
+            #ffffff 0,
+            #ffffff var(--range-progress, 0%),
+            #1c1c1c var(--range-progress, 0%),
+            #1c1c1c 100%
+        );
     }
 
     /* Thumb */
@@ -422,8 +433,8 @@
         appearance: none;
         margin-top: -2px;
         background-color: #ffffff;
-        height: 0.8rem;
-        width: 0.8rem;
+        height: 0.6rem;
+        width: 0.6rem;
         border-radius: 50%;
         border: 2px solid white;
     }
