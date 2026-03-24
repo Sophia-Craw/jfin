@@ -23,13 +23,33 @@
         User2,
         User,
         Music,
+        Scale,
+        ChevronUp,
+        LogOut,
     } from "@lucide/svelte";
     import SidebarFooter from "./ui/sidebar/sidebar-footer.svelte";
     import SidebarGroupAction from "./ui/sidebar/sidebar-group-action.svelte";
     import { onMount } from "svelte";
     import { currentLib } from "$lib/stores";
+    import Avatar from "./ui/avatar/avatar.svelte";
+    import AvatarImage from "./ui/avatar/avatar-image.svelte";
+    import Item from "./ui/item/item.svelte";
+    import ItemMedia from "./ui/item/item-media.svelte";
+    import ItemContent from "./ui/item/item-content.svelte";
+    import ItemTitle from "./ui/item/item-title.svelte";
+    import ItemDescription from "./ui/item/item-description.svelte";
+    import ItemActions from "./ui/item/item-actions.svelte";
+    import DropdownMenu from "./ui/dropdown-menu/dropdown-menu.svelte";
+    import DropdownMenuTrigger from "./ui/dropdown-menu/dropdown-menu-trigger.svelte";
+    import DropdownMenuContent from "./ui/dropdown-menu/dropdown-menu-content.svelte";
+    import DropdownMenuGroup from "./ui/dropdown-menu/dropdown-menu-group.svelte";
+    import DropdownMenuItem from "./ui/dropdown-menu/dropdown-menu-item.svelte";
+    import Separator from "./ui/separator/separator.svelte";
+    import { goto } from "$app/navigation";
 
     const { data } = $props();
+
+    const libraries = $derived(data.Libraries.Items)
 
     let currLib = $state(page.params.id)
 
@@ -46,22 +66,20 @@
             <SidebarGroupLabel>Libraries</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    {#each data.Libraries.Items as item}
-                        {#if item.Type == "Folder"}
-                            <a href={"/library/" + item.Id}>
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton class="cursor-pointer"
-                                        isActive={currLib == item.Id || page.params.id === item.Id}
-                                        onclick={() => {
-                                            currLib = item.Id
-                                        }}
-                                    >
-                                        <Library />
-                                        {item.Name}
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            </a>
-                        {/if}
+                    {#each libraries as item}
+                        <a href={"/library/" + item.Id}>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton class="cursor-pointer"
+                                    isActive={currLib == item.Id || page.params.id === item.Id}
+                                    onclick={() => {
+                                        currLib = item.Id
+                                    }}
+                                >
+                                    <Library />
+                                    {item.Name}
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </a>
                     {/each}
                 </SidebarMenu>
             </SidebarGroupContent>
@@ -98,10 +116,39 @@
     </SidebarContent>
     <SidebarFooter>
         <SidebarMenuItem>
-            <SidebarMenuButton class="cursor-pointer">
-                <Settings />
-                Settings
-            </SidebarMenuButton>
+            <DropdownMenu>
+                <DropdownMenuTrigger>
+                    <Item class="cursor-pointer hover:bg-secondary">
+                        <ItemMedia variant="image">
+                            <Avatar>
+                                <AvatarImage src="/api/user/{data.User.Id ? data.User.Id : ""}/avatar"/>
+                            </Avatar>
+                        </ItemMedia>
+                        <ItemContent>
+                            <ItemTitle class="line-clamp-1">{data.User.Name ? data.User.Name : "Log In"}</ItemTitle>
+                            <ItemDescription class="line-clamp-1">{data.User.Address ? data.User.Address : "Log In"}</ItemDescription>
+                        </ItemContent>
+                        <ItemActions>
+                            <ChevronUp class="opacity-50" />
+                        </ItemActions>
+                    </Item>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem class="cursor-pointer">
+                            <User />
+                            Edit Profile
+                        </DropdownMenuItem>
+                        <Separator />
+                        <DropdownMenuItem class="cursor-pointer" variant="destructive" onclick={() => {
+                            goto("/api/logout")
+                        }}>
+                            <LogOut />
+                            Log out
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </SidebarMenuItem>
     </SidebarFooter>
 </Sidebar>

@@ -11,7 +11,14 @@
 	import { currentLib } from "$lib/stores.js";
 	import { page } from "$app/state";
 	import Button from "$lib/components/ui/button/button.svelte";
-	import { ArrowLeft, ArrowRight, DiscAlbum, Music, Search, User } from "@lucide/svelte";
+	import {
+		ArrowLeft,
+		ArrowRight,
+		DiscAlbum,
+		Music,
+		Search,
+		User,
+	} from "@lucide/svelte";
 	import Input from "$lib/components/ui/input/input.svelte";
 	import InputGroup from "$lib/components/ui/input-group/input-group.svelte";
 	import InputGroupInput from "$lib/components/ui/input-group/input-group-input.svelte";
@@ -25,20 +32,28 @@
 	import ItemContent from "$lib/components/ui/item/item-content.svelte";
 	import ItemTitle from "$lib/components/ui/item/item-title.svelte";
 	import ItemDescription from "$lib/components/ui/item/item-description.svelte";
-    import ToggleGroup from "$lib/components/ui/toggle-group/toggle-group.svelte";
-    import ToggleGroupItem from "$lib/components/ui/toggle-group/toggle-group-item.svelte";
-    import DialogHeader from "$lib/components/ui/dialog/dialog-header.svelte";
-    import Label from "$lib/components/ui/label/label.svelte";
-    import Cover from "$lib/components/Cover.svelte";
-    import Kbd from "$lib/components/ui/kbd/kbd.svelte";
-    import KbdGroup from "$lib/components/ui/kbd/kbd-group.svelte";
-    import { goto } from "$app/navigation";
+	import ToggleGroup from "$lib/components/ui/toggle-group/toggle-group.svelte";
+	import ToggleGroupItem from "$lib/components/ui/toggle-group/toggle-group-item.svelte";
+	import DialogHeader from "$lib/components/ui/dialog/dialog-header.svelte";
+	import Label from "$lib/components/ui/label/label.svelte";
+	import Cover from "$lib/components/Cover.svelte";
+	import Kbd from "$lib/components/ui/kbd/kbd.svelte";
+	import KbdGroup from "$lib/components/ui/kbd/kbd-group.svelte";
+	import { goto } from "$app/navigation";
+	import AlertDialog from "$lib/components/ui/alert-dialog/alert-dialog.svelte";
+	import AlertDialogContent from "$lib/components/ui/alert-dialog/alert-dialog-content.svelte";
+	import AlertDialogHeader from "$lib/components/ui/alert-dialog/alert-dialog-header.svelte";
+	import AlertDialogTitle from "$lib/components/ui/alert-dialog/alert-dialog-title.svelte";
+	import Field from "$lib/components/ui/field/field.svelte";
+	import AlertDialogFooter from "$lib/components/ui/alert-dialog/alert-dialog-footer.svelte";
+	import AlertDialogAction from "$lib/components/ui/alert-dialog/alert-dialog-action.svelte";
+	import Spinner from "$lib/components/ui/spinner/spinner.svelte";
+	import { enhance } from "$app/forms";
+    import { toast, Toaster } from "svelte-sonner";
 
 	let { data, children } = $props();
+	let authLoading = $state(false);
 
-	onMount(() => {
-		currentLib.set(page.params.id || "");
-	});
 
 	let dialogOpen = $state(false);
 	let query = $state("");
@@ -47,28 +62,80 @@
 	let filter = $state("MusicAlbum");
 
 	onMount(() => {
+		currentLib.set(page.params.id || "");
+
 		currentLib.subscribe((l) => {
 			currLib = l;
 		});
 
-		console.log(data.searchItems)
+		console.log(data)
 	});
 
 	const openSearch = (e: KeyboardEvent) => {
 		if ((e.metaKey || e.ctrlKey) && e.key == "k") {
-			e.preventDefault()
-			goto(`/library/${currLib}`)
-			dialogOpen = true
+			e.preventDefault();
+			goto(`/library/${currLib}`);
+			dialogOpen = true;
 		}
-	}
+	};
 </script>
 
-<svelte:window onkeydown={openSearch}></svelte:window>
+<svelte:window onkeydown={openSearch} />
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<title>Jfin</title>
 </svelte:head>
+
+<Toaster theme="system" />
+
+<AlertDialog open={data.User.Name ? false : true}>
+	<AlertDialogContent class="w-80">
+		<AlertDialogHeader>
+			<AlertDialogTitle>Login to Jellyfin</AlertDialogTitle>
+		</AlertDialogHeader>
+		<form action="/" method="POST" class="flex flex-col gap-2" use:enhance={() => {
+			return async ({ result, update }) => {
+				if (result.type !== "success") {
+					authLoading = false
+					toast.message("Failed to login...")
+					await update()
+				} else {
+					await update()
+				}
+			}
+		}} onsubmit={() => {
+			authLoading = true
+		}}>
+			<Input
+				required
+				name="address"
+				type="text"
+				placeholder="Jellyfin Address"
+			/>
+			<Separator />
+			<Input required name="user" type="text" placeholder="User" />
+			<Input
+				required
+				name="password"
+				type="password"
+				placeholder="Password"
+			/>
+			<AlertDialogFooter>
+				<AlertDialogAction
+					type="submit"
+					disabled={authLoading ? true : false}
+					class="cursor-pointer"
+				>
+					{#if authLoading}
+						<Spinner />
+					{/if}
+					Login
+				</AlertDialogAction>
+			</AlertDialogFooter>
+		</form>
+	</AlertDialogContent>
+</AlertDialog>
 
 <div
 	class="fixed left-64 right-0 top-0 bg-linear-to-b from-background to-transparent flex justify-between p-4 pl-12 pr-12 z-20"
@@ -104,8 +171,8 @@
 			<DialogTrigger>
 				<Button
 					onclick={() => {
-						goto(`/library/${currLib}`)
-						dialogOpen = true	
+						goto(`/library/${currLib}`);
+						dialogOpen = true;
 					}}
 					variant="outline"
 					class="flex justify-start gap-2 cursor-pointer w-60"
@@ -129,22 +196,46 @@
 					<Input bind:value={query} placeholder="Search..." />
 					<Separator />
 					<ToggleGroup type="single" variant="outline">
-						<ToggleGroupItem class={filter === "MusicAlbum" ? "cursor-pointer bg-secondary" : "cursor-pointer"} value="MusicAlbum" onclick={() => {filter = "MusicAlbum"}}>
+						<ToggleGroupItem
+							class={filter === "MusicAlbum"
+								? "cursor-pointer bg-secondary"
+								: "cursor-pointer"}
+							value="MusicAlbum"
+							onclick={() => {
+								filter = "MusicAlbum";
+							}}
+						>
 							<DiscAlbum />
 							Albums
 						</ToggleGroupItem>
-						<ToggleGroupItem class={filter === "MusicArtist" ? "cursor-pointer bg-secondary" : "cursor-pointer"} value="MusicArtist" onclick={() => {filter = "MusicArtist"}}>
+						<ToggleGroupItem
+							class={filter === "MusicArtist"
+								? "cursor-pointer bg-secondary"
+								: "cursor-pointer"}
+							value="MusicArtist"
+							onclick={() => {
+								filter = "MusicArtist";
+							}}
+						>
 							<User />
 							Artists
 						</ToggleGroupItem>
-						<ToggleGroupItem class={filter === "Audio" ? "cursor-pointer bg-secondary" : "cursor-pointer"} value="Audio" onclick={() => {filter = "Audio"}}>
+						<ToggleGroupItem
+							class={filter === "Audio"
+								? "cursor-pointer bg-secondary"
+								: "cursor-pointer"}
+							value="Audio"
+							onclick={() => {
+								filter = "Audio";
+							}}
+						>
 							<Music />
 							Tracks
 						</ToggleGroupItem>
 					</ToggleGroup>
 				</div>
 				<div class="overflow-y-scroll">
-					{#each data.searchItems.Items as item}
+					{#each data.searchItems?.Items as item}
 						{#if item.Name.includes(query)}
 							{#if item.Type === filter}
 								{#if item.Type === "MusicAlbum"}
@@ -163,7 +254,9 @@
 												/>
 											</ItemMedia>
 											<ItemContent>
-												<ItemTitle>{item.Name}</ItemTitle>
+												<ItemTitle
+													>{item.Name}</ItemTitle
+												>
 												<ItemDescription
 													>{item.AlbumArtist}</ItemDescription
 												>
@@ -179,11 +272,19 @@
 												dialogOpen = false;
 											}}
 										>
-											<ItemMedia variant="image" class="object-cover rounded-full">
-												<Cover album={item} type="artist" />
+											<ItemMedia
+												variant="image"
+												class="object-cover rounded-full"
+											>
+												<Cover
+													album={item}
+													type="artist"
+												/>
 											</ItemMedia>
 											<ItemContent>
-												<ItemTitle>{item.Name}</ItemTitle>
+												<ItemTitle
+													>{item.Name}</ItemTitle
+												>
 											</ItemContent>
 										</Item>
 									</a>
@@ -204,7 +305,9 @@
 												/>
 											</ItemMedia>
 											<ItemContent>
-												<ItemTitle>{item.Name}</ItemTitle>
+												<ItemTitle
+													>{item.Name}</ItemTitle
+												>
 												<ItemDescription
 													>{item.AlbumArtist}</ItemDescription
 												>

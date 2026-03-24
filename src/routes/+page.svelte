@@ -1,25 +1,29 @@
 <script>
+    import { page } from "$app/state";
     import Label from "$lib/components/ui/label/label.svelte";
     import { Library } from "@lucide/svelte";
+    import { onMount } from "svelte";
+    import { toast } from "svelte-sonner";
 
-    const { data } = $props()
+    const { data } = $props();
 </script>
 
-
-<main>
+<main class="mt-20">
     <Label>
         <Library />
         Libraries
     </Label>
     <div class="library-list">
         {#each data.Libraries.Items as item}
-            {#if item.Type == "Folder"}
-                <a href={"/library/" + item.Id}>
-                    <div class="item">
-                        <img class="lib-cover" src={"/api/cover/" + item.Id} alt="">
-                    </div>
-                </a>
-            {/if}
+            <a href={"/library/" + item.Id}>
+                <div class="item">
+                    <img
+                        class="lib-cover"
+                        src={"/api/cover/" + item.Id}
+                        alt=""
+                    />
+                </div>
+            </a>
         {/each}
     </div>
 </main>

@@ -3,16 +3,14 @@ export async function GET({ params, cookies }) {
 
     const user = cookies.get("user") ? JSON.parse(cookies.get("user") || "") : ""
 
-    const resp = await fetch(user.User.Address + "/Items/" + params.id + "/Images/Primary")
-    const data = resp.body;
-
-    const headers = {
-        "Content-Type": "image/jpeg"
-    }
+    const resp = await fetch(`${user.User.Address}/UserImage?userId=${params.id}&api_key=${user.User.Token}`)
+    const data = await resp.body
 
     if (cookies.get("user")) {
         return new Response(data, {
-            headers: headers
+            headers: {
+                "Content-Type": "image/jpeg"
+            }
         })
     } else {
         return new Response(JSON.stringify({message: "Forbidden"}), {

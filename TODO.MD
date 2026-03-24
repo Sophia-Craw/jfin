@@ -8,12 +8,12 @@
 
 4. Implement settings
 
-5. Implement user restricted access
+5. ✅ ~~Implement user restricted access~~
 
-   Example: A user logged out but accessing the web inerface cannot play a track.
+   ~~Example: A user logged out but accessing the web inerface cannot play a track.~~
 
 6. Add some sort of page loading indicator.
 
-7. User profiles
+7. ✅ ~~User profile~~
 
 8. Being able to add tracks to the queue individually

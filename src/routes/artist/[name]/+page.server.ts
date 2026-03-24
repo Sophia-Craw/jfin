@@ -1,14 +1,21 @@
-import { API_KEY, JELLYFIN_ADDRESS } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
 
-export const load = async ({ params }) => {
-    const resp = await fetch(`${JELLYFIN_ADDRESS}/Artists/${params.name}?api_key=${API_KEY}`)
+export const load = async ({ params, cookies }) => {
+
+    const user = cookies.get("user") ? JSON.parse(cookies.get("user") || "") : ""
+
+    const resp = await fetch(`${user.User.Address}/Artists/${params.name}?api_key=${user.User.Token}`)
     const data = await resp.json()
 
-    const albumResp = await fetch(`${JELLYFIN_ADDRESS}/Items?ArtistIds=${data.Id}&IncludeItemTypes=MusicAlbum&recursive=true&api_key=${API_KEY}`)
+    const albumResp = await fetch(`${user.User.Address}/Items?ArtistIds=${data.Id}&IncludeItemTypes=MusicAlbum&recursive=true&api_key=${user.User.Token}`)
     const albumData = await albumResp.json()
 
-    return {
-        ArtistInfo: data,
-        ArtistAlbums: albumData
+    if (cookies.get("user")) {
+        return {
+            ArtistInfo: data,
+            ArtistAlbums: albumData
+        }
+    } else {
+        return redirect(301, "/")
     }
 };

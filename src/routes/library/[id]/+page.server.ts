@@ -1,9 +1,15 @@
-import { API_KEY, JELLYFIN_ADDRESS } from '$env/static/private';
+import { redirect } from '@sveltejs/kit';
 
+export const load = async ({ params, cookies }) => {
 
-export const load = async ({ params }) => {
-    const resp = await fetch(`${JELLYFIN_ADDRESS}/Items?parentId=${params.id}&recursive=true&IncludeItemTypes=MusicAlbum&api_key=${API_KEY}`)
+    const user = cookies.get("user") ? JSON.parse(cookies.get("user") || "") : ""
+
+    const resp = await fetch(`${user.User.Address}/Items?parentId=${params.id}&recursive=true&IncludeItemTypes=MusicAlbum&api_key=${user.User.Token}`)
     const albums = await resp.json()
 
-    return albums
+    if (cookies.get("user")) {
+        return albums
+    } else {
+        return redirect(301, "/")
+    }
 };

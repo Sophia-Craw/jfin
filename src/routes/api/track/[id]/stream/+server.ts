@@ -1,8 +1,9 @@
-import { API_KEY, JELLYFIN_ADDRESS } from '$env/static/private'
 
+export async function GET({ params, cookies }) {
 
-export async function GET({ params }) {
-    const resp = await fetch(`${JELLYFIN_ADDRESS}/Items/${params.id}/Download?api_key=${API_KEY}`)
+    const user = cookies.get("user") ? JSON.parse(cookies.get("user") || "") : ""
+
+    const resp = await fetch(`${user.User.Address}/Items/${params.id}/Download?api_key=${user.User.Token}`)
 
     const headers = {
         "Content-Type": "audio/mpeg",
@@ -11,8 +12,14 @@ export async function GET({ params }) {
         "Content-Length": resp.headers.get("Content-Length")!
     }
 
-    return new Response(await resp.body, {
-        status: await resp.status === 206 ? 206 : 200,
-        headers: headers
-    })
+    if (cookies.get("user")) {
+        return new Response(await resp.body, {
+            status: await resp.status === 206 ? 206 : 200,
+            headers: headers
+        })
+    } else {
+        return new Response(JSON.stringify({message: "Forbidden"}), {
+            status: 403
+        })
+    }
 }
