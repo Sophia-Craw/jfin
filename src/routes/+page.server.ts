@@ -1,6 +1,27 @@
 
 export const actions = {
-    default: async ({ cookies, request }) => {
+
+    libset: async ({ request, cookies }) => {
+        if (cookies.get("user")) {
+            const user = cookies.get("user") ? JSON.parse(cookies.get("user") || "") : ""
+            const data = await request.formData()
+            const lib = data.get("lib")
+
+            user.User.Lib = lib
+            cookies.set("user", JSON.stringify(user), {path: "/"})
+
+            return {
+                success: true,
+                message: lib
+            }
+        } else {
+            return {
+                success: false
+            }
+        }
+    },
+
+    login: async ({ cookies, request }) => {
         const data = await request.formData()
         const address = data.get("address")
         const username = data.get("user")
@@ -27,7 +48,8 @@ export const actions = {
                         Name: data.User.Name,
                         Id: data.User.Id,
                         Address: address,
-                        Token: data.AccessToken
+                        Token: data.AccessToken,
+                        Lib: ""
                     }
                 }), { path: "/" })
                 return { success: true }

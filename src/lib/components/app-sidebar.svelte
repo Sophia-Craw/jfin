@@ -63,6 +63,16 @@
 <Sidebar>
     <SidebarContent>
         <SidebarGroup>
+            <SidebarGroupContent>
+                <a href="/">
+                    <SidebarMenuItem>
+                        <SidebarMenuButton class="cursor-pointer" isActive={page.url.pathname === "/"}>
+                            <Home />
+                            Home
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </a>
+            </SidebarGroupContent>
             <SidebarGroupLabel>Libraries</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
@@ -83,33 +93,35 @@
                     {/each}
                 </SidebarMenu>
             </SidebarGroupContent>
-            <SidebarGroupLabel>Categories</SidebarGroupLabel>
+            <SidebarGroupLabel>Library Categories</SidebarGroupLabel>
             <SidebarGroupContent>
                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <a href={currLib ? "/library/" + currLib : "/"}>
-                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}`} class="cursor-pointer">
-                                <DiscAlbum />
-                                Albums
-                            </SidebarMenuButton>
-                        </a>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <a href={currLib ? "/library/" + currLib + "/artists": "/"}>
-                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/artists`}  class="cursor-pointer">
-                                <User />
-                                Artists
-                            </SidebarMenuButton>
-                        </a>
-                    </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <a href={currLib ? "/library/" + currLib + "/tracks": "/"}>
-                            <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/tracks`}  class="cursor-pointer">
-                                <Music />
-                                Tracks
-                            </SidebarMenuButton>                        
-                        </a>
-                    </SidebarMenuItem>
+                    {#if currLib}
+                        <SidebarMenuItem>
+                            <a href={currLib ? "/library/" + currLib : "/"}>
+                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}`} class="cursor-pointer">
+                                    <DiscAlbum />
+                                    Albums
+                                </SidebarMenuButton>
+                            </a>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <a href={currLib ? "/library/" + currLib + "/artists": "/"}>
+                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/artists`}  class="cursor-pointer">
+                                    <User />
+                                    Artists
+                                </SidebarMenuButton>
+                            </a>
+                        </SidebarMenuItem>
+                        <SidebarMenuItem>
+                            <a href={currLib ? "/library/" + currLib + "/tracks": "/"}>
+                                <SidebarMenuButton isActive={page.url.pathname === `/library/${currLib}/tracks`}  class="cursor-pointer">
+                                    <Music />
+                                    Tracks
+                                </SidebarMenuButton>                        
+                            </a>
+                        </SidebarMenuItem>              
+                    {/if}
                 </SidebarMenu>
             </SidebarGroupContent>
         </SidebarGroup>

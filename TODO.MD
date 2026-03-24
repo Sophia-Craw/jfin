@@ -2,7 +2,7 @@
 
 1. ✅ ~~Implement search~~
 
-2. Rebuild root(/) page
+2. ✅ ~~Rebuild root(/) page~~
 
 3. General cleanup (especially converting the vanilla css to tailwind.)
 

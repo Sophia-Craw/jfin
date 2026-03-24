@@ -38,7 +38,7 @@
             alt=""
         />
     {/key}
-{:else}
+{:else if type !== "embedded"}
     {#key loaded}
         <img
             in:fade={{ duration: 500 }}

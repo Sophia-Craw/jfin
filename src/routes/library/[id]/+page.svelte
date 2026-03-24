@@ -29,8 +29,8 @@
                         <Cover album={album} type={"library"} />
                     </ItemHeader>
                     <ItemContent class="w-0">
-                        <ItemTitle class="flex w-full text-center justify-center">{album.Name}</ItemTitle>
-                        <ItemDescription class="text-center">{album.AlbumArtist}</ItemDescription>
+                        <ItemTitle class="flex w-full text-center justify-center line-clamp-1">{album.Name}</ItemTitle>
+                        <ItemDescription class="text-center line-clamp-1">{album.AlbumArtist}</ItemDescription>
                     </ItemContent>
                 </Item>
             </a>

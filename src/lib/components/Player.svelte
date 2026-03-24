@@ -411,7 +411,7 @@
 
     /* Track */
     input[type="range"]::-webkit-slider-runnable-track {
-        background: #e2e8f0;
+        background: #1c1c1c;
         height: 0.5rem;
         border-radius: 9999px;
     }
@@ -420,13 +420,12 @@
     input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
-        margin-top: -4px;
-        background-color: #0f172a;
-        height: 1rem;
-        width: 1rem;
+        margin-top: -2px;
+        background-color: #ffffff;
+        height: 0.8rem;
+        width: 0.8rem;
         border-radius: 50%;
         border: 2px solid white;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     /* FIREFOX */
@@ -458,7 +457,7 @@
 
     input[type="range"]::-moz-range-progress {
         background-color: #ffffff;
-        border-radius: 9999px;
+        border-radius: 500px;
         height: 0.3rem;
     }
 </style>

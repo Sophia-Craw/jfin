@@ -15,6 +15,7 @@
 		ArrowLeft,
 		ArrowRight,
 		DiscAlbum,
+		LibraryBig,
 		Music,
 		Search,
 		User,
@@ -39,7 +40,7 @@
 	import Cover from "$lib/components/Cover.svelte";
 	import Kbd from "$lib/components/ui/kbd/kbd.svelte";
 	import KbdGroup from "$lib/components/ui/kbd/kbd-group.svelte";
-	import { goto } from "$app/navigation";
+	import { goto, invalidateAll } from "$app/navigation";
 	import AlertDialog from "$lib/components/ui/alert-dialog/alert-dialog.svelte";
 	import AlertDialogContent from "$lib/components/ui/alert-dialog/alert-dialog-content.svelte";
 	import AlertDialogHeader from "$lib/components/ui/alert-dialog/alert-dialog-header.svelte";
@@ -49,11 +50,12 @@
 	import AlertDialogAction from "$lib/components/ui/alert-dialog/alert-dialog-action.svelte";
 	import Spinner from "$lib/components/ui/spinner/spinner.svelte";
 	import { enhance } from "$app/forms";
-    import { toast, Toaster } from "svelte-sonner";
+	import { toast, Toaster } from "svelte-sonner";
+	import { AlertDialogDescription } from "$lib/components/ui/alert-dialog/index.js";
+    import AspectRatio from "$lib/components/ui/aspect-ratio/aspect-ratio.svelte";
 
 	let { data, children } = $props();
 	let authLoading = $state(false);
-
 
 	let dialogOpen = $state(false);
 	let query = $state("");
@@ -61,18 +63,25 @@
 
 	let filter = $state("MusicAlbum");
 
+	let selectedLib = $state("");
+
 	onMount(() => {
-		currentLib.set(page.params.id || "");
+		currentLib.set(data.User.Lib || page.params.id || "");
+
+		if (data.User.Lib) {
+			goto("/library/" + data.User.Lib)
+		}
 
 		currentLib.subscribe((l) => {
 			currLib = l;
 		});
-
-		console.log(data)
 	});
 
 	const openSearch = (e: KeyboardEvent) => {
-		if ((e.metaKey || e.ctrlKey) && e.key == "k") {
+		if (
+			(e.metaKey || e.ctrlKey) &&
+			e.key == "k"
+		) {
 			e.preventDefault();
 			goto(`/library/${currLib}`);
 			dialogOpen = true;
@@ -94,19 +103,25 @@
 		<AlertDialogHeader>
 			<AlertDialogTitle>Login to Jellyfin</AlertDialogTitle>
 		</AlertDialogHeader>
-		<form action="/" method="POST" class="flex flex-col gap-2" use:enhance={() => {
-			return async ({ result, update }) => {
-				if (result.type !== "success") {
-					authLoading = false
-					toast.message("Failed to login...")
-					await update()
-				} else {
-					await update()
-				}
-			}
-		}} onsubmit={() => {
-			authLoading = true
-		}}>
+		<form
+			action="?/login"
+			method="POST"
+			class="flex flex-col gap-2"
+			use:enhance={() => {
+				return async ({ result, update }) => {
+					if (result.type !== "success") {
+						authLoading = false;
+						toast.message("Failed to login...");
+						await update();
+					} else {
+						await update();
+					}
+				};
+			}}
+			onsubmit={() => {
+				authLoading = true;
+			}}
+		>
 			<Input
 				required
 				name="address"
@@ -131,6 +146,62 @@
 						<Spinner />
 					{/if}
 					Login
+				</AlertDialogAction>
+			</AlertDialogFooter>
+		</form>
+	</AlertDialogContent>
+</AlertDialog>
+
+<AlertDialog open={data.User.Id && data.User.Lib === ""}>
+	<AlertDialogContent>
+		<AlertDialogHeader class="flex gap-2">
+			<LibraryBig class="relative top-3" />
+			<div>
+				<AlertDialogTitle>
+					Select a library.
+				</AlertDialogTitle>
+				<AlertDialogDescription>
+					This will be your default library.
+				</AlertDialogDescription>
+			</div>
+		</AlertDialogHeader>
+		<Separator />
+		<form
+			action="?/libset"
+			method="post"
+			use:enhance={async () => {
+				return async ({ result, update }) => {
+					if (result.type !== "success") {
+						toast.message("Failed to set library...");
+						await update();
+					} else {
+						await invalidateAll()
+						await goto("/library/" + result.data?.message)
+					}
+				};
+			}}
+		>
+			<input type="hidden" name="lib" bind:value={selectedLib}>
+			{#each data.Libraries.Items as lib}
+				<Item class={lib.Id === selectedLib ? "cursor-pointer bg-secondary" : "cursor-pointer hover:bg-secondary"} onclick={() => {
+					selectedLib = lib.Id
+				}}>
+					<ItemMedia variant="image">
+						<!-- <img
+							src="/api/cover/{lib.Id}"
+							alt=""
+							class="rounded object-cover"
+						/> -->
+						<Cover album={lib} type="embedded" />
+					</ItemMedia>
+					<ItemContent>
+						<ItemTitle>{lib.Name}</ItemTitle>
+					</ItemContent>
+				</Item>
+			{/each}
+			<AlertDialogFooter class="p-2">
+				<AlertDialogAction disabled={ selectedLib ? false : true } class="cursor-pointer" type="submit">
+					Choose
 				</AlertDialogAction>
 			</AlertDialogFooter>
 		</form>
@@ -340,5 +411,6 @@
 	:root {
 		overflow-x: hidden;
 		padding-bottom: 100px;
+		background-color: black;
 	}
 </style>
