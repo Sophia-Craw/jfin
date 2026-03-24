@@ -19,7 +19,7 @@ Currently there is no prebuilt binaries or anything so you'll have to just run i
 
 ![Albums](/preview/albums.png)
 ![Album](/preview//album.png)
-
 ![Artists](/preview/artists.png)
-
 ![Tracks](/preview/tracks.png)
+![Search](/preview/search.png)
+![Artist](/preview/artist.png)
