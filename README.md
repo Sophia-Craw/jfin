@@ -3,7 +3,7 @@
 ## Deployment
 Currently there is no prebuilt binaries or anything so you'll have to just run it in a dev environment. To do so do the following:
 
-   Navigate to the root of the repo in a termianl and run:
+   Navigate to the root of the repo in a terminal and run:
    ```npm i```
 
    Wait for this to finish.
