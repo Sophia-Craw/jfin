@@ -1,4 +1,4 @@
-# Jellyfin Music Client (To be named)
+# Jfin
 
 ## Deployment
 Currently there is no prebuilt binaries or anything so you'll have to just run it in a dev environment. To do so do the following:
