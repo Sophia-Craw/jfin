@@ -10,6 +10,11 @@ Currently there is no prebuilt binaries or anything so you'll have to just run i
 
    ```npm run dev```
 
+   **Instead**
+   To run as an Electron app run the following command
+
+   ```npm run electron:rebuild```
+
    If you wish to contribute to the project please read the [todos](/TODO.MD).
 
 ![Albums](/preview/albums.png)
