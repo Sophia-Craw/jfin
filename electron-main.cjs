@@ -48,8 +48,13 @@ function createWindow(port, origin) {
 		width: 1200,
 		height: 800,
 		backgroundColor: "black",
-		titleBarOverlay: false,
 		titleBarStyle: "hidden",
+		title: "Jfin",
+		titleBarOverlay: {
+			color: "#0a0a0a",
+			symbolColor: "white",
+			height: 35,
+		},
 		webPreferences: {
 			nodeIntegration: false,
 			contextIsolation: true
