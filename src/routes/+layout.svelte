@@ -1,6 +1,6 @@
 <script lang="ts">
 	import "./layout.css";
-	import favicon from "$lib/assets/favicon.svg";
+	import favicon from "$lib/assets/favicon.png";
 	import { ModeWatcher } from "mode-watcher";
 	import Sidebar from "$lib/components/ui/sidebar/sidebar.svelte";
 	import SidebarProvider from "$lib/components/ui/sidebar/sidebar-provider.svelte";
