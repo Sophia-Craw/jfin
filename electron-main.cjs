@@ -3,6 +3,7 @@ const { fork } = require("child_process")
 const path = require("path")
 const http = require("http")
 const net = require("net")
+const fs = require("fs")
 
 let svelteProcess
 
@@ -50,6 +51,7 @@ function createWindow(port, origin) {
 		backgroundColor: "black",
 		titleBarStyle: "hidden",
 		title: "Jfin",
+		icon: "/app.icns",
 		titleBarOverlay: {
 			color: "#0a0a0a",
 			symbolColor: "white",
@@ -60,9 +62,19 @@ function createWindow(port, origin) {
 			contextIsolation: true
 		}
 	})
-	
-	svelteProcess = fork(path.join(__dirname, "build", "index.js"), [], {
-		cwd: __dirname,
+
+	const unpackedRoot = __dirname.replace(/app\.asar(\/|\\)?$/, "app.asar.unpacked")
+	const unpackedServerPath = path.join(unpackedRoot, "build", "index.js")
+
+	let serverPath = unpackedServerPath
+	let serverCwd = unpackedRoot
+	if (!fs.existsSync(unpackedServerPath)) {
+		serverPath = path.join(__dirname, "build", "index.js")
+		serverCwd = __dirname
+	}
+
+	svelteProcess = fork(serverPath, [], {
+		cwd: serverCwd,
 		env: {
 			...process.env,
 			ELECTRON_RUN_AS_NODE: "1",
@@ -96,6 +108,11 @@ function createWindow(port, origin) {
 		if (svelteProcess) svelteProcess.kill()
 	})
 }
+
+app.setName("Jfin")
+app.setAboutPanelOptions({
+	setName: "Jfin"
+})
 
 app.whenReady().then(async () => {
 	let port
