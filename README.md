@@ -1,7 +1,6 @@
 # Jfin
 
 ## Deployment
-Currently there is no prebuilt binaries or anything so you'll have to just run it in a dev environment. To do so do the following:
 
    Navigate to the root of the repo in a terminal and run:
    ```npm i```
@@ -10,10 +9,9 @@ Currently there is no prebuilt binaries or anything so you'll have to just run i
 
    ```npm run dev```
 
-   **Instead**
-   To run as an Electron app run the following command
+   You can also debug as an electron application by running the following:
 
-   ```npm run electron:rebuild```
+   ```npm run start```
 
    If you wish to contribute to the project please read the [todos](/TODO.MD).
 
