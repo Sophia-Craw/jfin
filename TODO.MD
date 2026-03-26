@@ -6,7 +6,7 @@
 
 3. General cleanup (especially converting the vanilla css to tailwind.)
 
-4. Implement settings
+4. Implement edit profile dialog
 
 5. ✅ ~~Implement user restricted access~~
 
@@ -16,4 +16,4 @@
 
 7. ✅ ~~User profile~~
 
-8. Being able to add tracks to the queue individually
+8. ✅ ~~Being able to add tracks to the queue individually~~

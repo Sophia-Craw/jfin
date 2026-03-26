@@ -1,5 +1,11 @@
 <script lang="ts">
+    import { goto } from '$app/navigation';
     import Cover from '$lib/components/Cover.svelte';
+    import Button from '$lib/components/ui/button/button.svelte';
+    import DropdownMenuItem from '$lib/components/ui/dropdown-menu/dropdown-menu-item.svelte';
+    import DropdownMenuTrigger from '$lib/components/ui/dropdown-menu/dropdown-menu-trigger.svelte';
+    import DropdownMenu from '$lib/components/ui/dropdown-menu/dropdown-menu.svelte';
+    import { DropdownMenuContent } from '$lib/components/ui/dropdown-menu/index.js';
     import Separator from '$lib/components/ui/separator/separator.svelte';
     import Slider from '$lib/components/ui/slider/slider.svelte';
     import TableBody from '$lib/components/ui/table/table-body.svelte';
@@ -10,11 +16,21 @@
     import Table from '$lib/components/ui/table/table.svelte';
     import { currentPlaying, queue, startingIndex } from '$lib/stores.js';
     import type { Track } from '$lib/types.js';
+    import { DiscAlbum, ListPlus, MoreHorizontal } from '@lucide/svelte';
     import { onMount } from 'svelte';
+    import { toast } from 'svelte-sonner';
 
     const { data } = $props()
 
     let currTrack: string = $state("")
+
+    let que: Array<Track> = $state([{
+        Name: "",
+        Id: "",
+        AlbumId: "",
+        AlbumArtist: "",
+        Album: ""
+    }])
 
     onMount(() => {
         currentPlaying.subscribe((t) => {
@@ -22,12 +38,21 @@
 
             console.log(t)
         })
+
+        queue.subscribe((q) => {
+            que = q
+        })
     })
 
     const handleTrackSelect = (tk: Track, index: number) => {
         queue.set(data.Tracks.Items)
         startingIndex.set(index)
         currentPlaying.set(tk)
+    }
+
+    const addToQueue = (track: Track) => {
+        que.push(track)
+        queue.set(que)
     }
 </script>
 
@@ -61,6 +86,30 @@
                     <TableCell>{track.Name}</TableCell>
                     <TableCell style={currTrack === track.Id ? `color: #ff8d6c;` : `color: gray`}>{track.Artists[0]}</TableCell>
                     <TableCell style={currTrack === track.Id ? `color: #ff8d6c;` : `color: gray`}>{track.Album}</TableCell>
+                    <TableCell>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger>
+                                <Button variant="secondary" class="hover:cursor-pointer">
+                                    <MoreHorizontal />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent class="relative w-50 right-12">
+                                <DropdownMenuItem class="hover:cursor-pointer" onclick={() => {
+                                    goto("/album/" + track.AlbumId)
+                                }}>
+                                    <DiscAlbum />
+                                    Go to Album
+                                </DropdownMenuItem>
+                                <DropdownMenuItem class="hover:cursor-pointer" onclick={() => {
+                                    addToQueue(track)
+                                    toast.message("Added " + track.Name + " to the queue.")
+                                }}>
+                                    <ListPlus />
+                                    Add to Queue
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </TableCell>
                 </TableRow>
             {/each}
         </TableBody>

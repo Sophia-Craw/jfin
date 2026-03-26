@@ -6,13 +6,16 @@
     import Slider from "./ui/slider/slider.svelte";
     import {
         Album,
+        DiscAlbum,
         List,
+        MoreHorizontal,
         Pause,
         Play,
         Repeat,
         Repeat1,
         SkipBack,
         SkipForward,
+        Trash,
         Volume,
         Volume2,
         VolumeOff,
@@ -27,6 +30,12 @@
     import ItemTitle from "./ui/item/item-title.svelte";
     import ItemDescription from "./ui/item/item-description.svelte";
     import Separator from "./ui/separator/separator.svelte";
+    import ItemActions from "./ui/item/item-actions.svelte";
+    import DropdownMenu from "./ui/dropdown-menu/dropdown-menu.svelte";
+    import DropdownMenuTrigger from "./ui/dropdown-menu/dropdown-menu-trigger.svelte";
+    import DropdownMenuContent from "./ui/dropdown-menu/dropdown-menu-content.svelte";
+    import DropdownMenuItem from "./ui/dropdown-menu/dropdown-menu-item.svelte";
+    import { goto } from "$app/navigation";
 
     let audio: HTMLAudioElement;
     let currTime = $state(0);
@@ -120,6 +129,12 @@
             currentPlaying.set(que[pos]);
         }
     };
+
+    const removeTrackFromQueue = (track: Track) => {
+        if (track) {
+            que = que.filter((t) => t.Id !== track.Id)
+        }
+    }
 </script>
 
 <audio
@@ -208,7 +223,7 @@
                 </Button>
             </div>
             <div>
-                {#if track.Id !== ""}
+                {#if que.length > 0 && track.Id}
                     <Popover bind:open={openq}>
                         <PopoverTrigger>
                             <Button style="cursor: pointer;" variant={openq ? "secondary" : "ghost"}>
@@ -238,26 +253,51 @@
                                     >
                                 </ItemContent>
                                 <Separator />
-                                <div class="overflow-x-scroll max-h-100 w-full">
+                                <div class="overflow-x-scroll max-h-100 w-full ">
                                     {#each que as qTrack, idx}
-                                        <ItemContent class="p-2 cursor-pointer hover:bg-secondary transition-normal rounded-md w-full" onclick={() => {
-                                            currentPlaying.set(qTrack)
-                                            startingIndex.set(idx)
-                                        }}>
-                                            <ItemTitle
-                                                class="line-clamp-1"
-                                                style={track.Id === qTrack.Id
-                                                    ? "color: #ff8d6c;"
-                                                    : "color: inherit;"}
-                                                >{qTrack.Name} -
-                                                <span class="text-muted-foreground"
-                                                    >{track.Album}</span
-                                                ></ItemTitle
-                                            >
-                                            <ItemDescription class="line-clamp-1"
-                                                >{qTrack.AlbumArtist}</ItemDescription
-                                            >
-                                        </ItemContent>
+                                        <Item class="p-0">
+                                            <ItemContent class="flex flex-nowrap p-2 cursor-pointer hover:bg-secondary transition-normal rounded-md w-full" onclick={() => {
+                                                currentPlaying.set(qTrack)
+                                                startingIndex.set(idx)
+                                            }}>
+                                                <ItemTitle
+                                                    class="line-clamp-1"
+                                                    style={track.Id === qTrack.Id
+                                                        ? "color: #ff8d6c;"
+                                                        : "color: inherit;"}
+                                                    >{qTrack.Name} -
+                                                    <span class="text-muted-foreground"
+                                                        >{qTrack.Album}</span
+                                                    ></ItemTitle
+                                                >
+                                                <ItemDescription class="line-clamp-1"
+                                                    >{qTrack.AlbumArtist}</ItemDescription
+                                                >
+                                            </ItemContent>
+                                            <ItemActions>
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger>
+                                                        <Button variant="ghost" class="cursor-pointer">
+                                                            <MoreHorizontal />
+                                                        </Button>
+                                                    </DropdownMenuTrigger>
+                                                    <DropdownMenuContent class="w-50">
+                                                        <DropdownMenuItem class="cursor-pointer" onclick={() => {
+                                                            goto("/album/" + qTrack.AlbumId)
+                                                        }}>
+                                                            <DiscAlbum />
+                                                            Go to Album
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuItem variant="destructive" class="cursor-pointer" onclick={() => {
+                                                            removeTrackFromQueue(qTrack)
+                                                        }}>
+                                                            <Trash />
+                                                            Remove from queue
+                                                        </DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </ItemActions>
+                                        </Item>
                                     {/each}
                                 </div>
                             </Item>
