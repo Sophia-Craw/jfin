@@ -1,7 +1,7 @@
 # Jfin
 
-## Deployment
-
+## Installing dev environment (FOR DEVELOPERS AND CONTRIBUTORS)
+ 
    Navigate to the root of the repo in a terminal and run:
    ```npm i```
 
