@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron")
+const { app, BrowserWindow, session } = require("electron")
 const { fork } = require("child_process")
 const path = require("path")
 const http = require("http")
@@ -59,7 +59,8 @@ function createWindow(port, origin) {
 		},
 		webPreferences: {
 			nodeIntegration: false,
-			contextIsolation: true
+			contextIsolation: true,
+			partition: "persist:jfin"
 		}
 	})
 
@@ -130,6 +131,7 @@ app.whenReady().then(async () => {
 app.on("window-all-closed", () => {
 	if (process.platform !== "darwin") {
 		if (svelteProcess) svelteProcess.kill()
+		session.defaultSession.cookies.flushStore()
 		app.quit()
 	}
 })

@@ -8,7 +8,7 @@ export const actions = {
             const lib = data.get("lib")
 
             user.User.Lib = lib
-            cookies.set("user", JSON.stringify(user), {path: "/"})
+            cookies.set("user", JSON.stringify(user), {path: "/", secure: false, httpOnly: true, sameSite: "lax", maxAge: 2592000})
 
             return {
                 success: true,
@@ -51,7 +51,7 @@ export const actions = {
                         Token: data.AccessToken,
                         Lib: ""
                     }
-                }), { path: "/" })
+                }), { path: "/", secure: false, httpOnly: true, sameSite: "lax", maxAge: 2592000 })
                 return { success: true }
             } else {
                 return { success: false }
