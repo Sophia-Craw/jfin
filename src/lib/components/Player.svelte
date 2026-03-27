@@ -41,7 +41,6 @@
     let currTime = $state(0);
     let duration = $state(0);
     let playState = $state(true);
-    let canPlay = $state(false);
     let mute = $state(false);
     let volume = $state(1);
 
@@ -143,7 +142,6 @@
 <audio
     bind:this={audio}
     bind:paused={playState}
-    oncanplay={() => {canPlay = true}}
     bind:currentTime={currTime}
     bind:volume
     bind:muted={mute}
@@ -173,7 +171,6 @@
                 type="range"
                 bind:value={currTime}
                 max={duration}
-                disabled={canPlay ? true : false}
                 step={1}
                 style="--range-progress: {scrubPct}%"
             />
