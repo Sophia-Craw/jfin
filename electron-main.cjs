@@ -51,7 +51,7 @@ function createWindow(port, origin) {
 		backgroundColor: "black",
 		titleBarStyle: "hidden",
 		title: "Jfin",
-		icon: "/app.icns",
+		icon: "/favicon.ico",
 		titleBarOverlay: {
 			color: "#0a0a0a",
 			symbolColor: "white",

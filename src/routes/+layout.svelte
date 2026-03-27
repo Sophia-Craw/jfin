@@ -53,6 +53,7 @@
 	import { toast, Toaster } from "svelte-sonner";
 	import { AlertDialogDescription } from "$lib/components/ui/alert-dialog/index.js";
     import AspectRatio from "$lib/components/ui/aspect-ratio/aspect-ratio.svelte";
+	import Logo from "$lib/assets/favicon.png"
 
 	let { data, children } = $props();
 	let authLoading = $state(false);
@@ -98,7 +99,10 @@
 
 <Toaster theme="system" />
 
-<div id="draggable" class="fixed top-0 left-0 right-0 p-4 bg-background z-1000"></div>
+<div id="draggable" class="fixed top-0 left-0 right-0 p-1.5 bg-background z-1000 flex gap-1">
+	<img class="w-5 h-5 object-contain" src={Logo} alt="" />
+	<Label class="font-extrabold">Jfin</Label>
+</div>
 
 <AlertDialog open={data.User.Name ? false : true}>
 	<AlertDialogContent class="w-80">
