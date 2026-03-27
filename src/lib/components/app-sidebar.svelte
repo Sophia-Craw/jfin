@@ -63,7 +63,7 @@
     })
 </script>
 
-<Sidebar variant="floating" class="pt-8">
+<Sidebar variant="floating" class="pt-9">
     <SidebarContent>
         <SidebarGroup>
             <SidebarGroupContent>
