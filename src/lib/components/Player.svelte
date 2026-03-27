@@ -41,6 +41,7 @@
     let currTime = $state(0);
     let duration = $state(0);
     let playState = $state(true);
+    let canPlay = $state(false);
     let mute = $state(false);
     let volume = $state(1);
 
@@ -94,6 +95,7 @@
 
     const handleEnd = () => {
         console.log(pos);
+        console.log(que.length)
         if (repeat === 1) {
             pos++;
             if (pos >= que.length) {
@@ -133,6 +135,7 @@
     const removeTrackFromQueue = (track: Track) => {
         if (track) {
             que = que.filter((t) => t.Id !== track.Id)
+            console.log(que.length)
         }
     }
 </script>
@@ -140,6 +143,7 @@
 <audio
     bind:this={audio}
     bind:paused={playState}
+    oncanplay={() => {canPlay = true}}
     bind:currentTime={currTime}
     bind:volume
     bind:muted={mute}
@@ -169,7 +173,7 @@
                 type="range"
                 bind:value={currTime}
                 max={duration}
-                disabled={playState ? true : false}
+                disabled={canPlay ? true : false}
                 step={1}
                 style="--range-progress: {scrubPct}%"
             />
