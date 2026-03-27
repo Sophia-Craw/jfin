@@ -1,3 +1,5 @@
+import { deviceID } from '$lib/client.js'
+import { uid } from 'uid'
 
 export const actions = {
 
@@ -31,7 +33,7 @@ export const actions = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `MediaBrowser Client="jfin", Device="Browser", DeviceId="34523423234", Version="1.0.0"`
+                "Authorization": `MediaBrowser Client="jfin", Device="Browser", DeviceId="${deviceID}", Version="1.0.0"`
             },
             body: JSON.stringify({
                 "Username": username,

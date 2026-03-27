@@ -99,7 +99,7 @@
 
 <Toaster theme="system" />
 
-<div id="draggable" class="fixed top-0 left-0 right-0 p-1.5 pr-2 bg-background z-1000 flex flex-row-reverse gap-1 pr-1">
+<div id="draggable" class="fixed top-0 left-0 right-0 p-1.5 bg-background z-1000 flex flex-row-reverse gap-1 pr-1">
 	<Label class="font-extrabold">Jfin</Label>
 	<img class="w-5 h-5 object-contain" src={Logo} alt="">
 </div>
